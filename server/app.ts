@@ -1,9 +1,7 @@
 import cors from "cors";
 import express from "express";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
-import { loadRawConformanceVectors, loadIarc20Spec, getPackageRoot } from "../src/spec/load-spec.js";
+import { loadDemoAbi, loadRawConformanceVectors, loadIarc20Spec } from "../src/spec/load-spec.js";
 import { runConformanceCheck } from "../src/validate/run-check.js";
 import type { LeoAbi } from "../src/types.js";
 
@@ -25,15 +23,13 @@ export function createApp() {
   });
 
   app.get("/api/demo/abi", (_req, res) => {
-    const fixturePath = join(getPackageRoot(), "tests", "fixtures", "conforming-abi.json");
-    res.json(JSON.parse(readFileSync(fixturePath, "utf8")));
+    res.json(loadDemoAbi());
   });
 
   app.get("/api/demo", async (_req, res, next) => {
     try {
-      const fixturePath = join(getPackageRoot(), "tests", "fixtures", "conforming-abi.json");
       const report = await runConformanceCheck({
-        abiPath: fixturePath,
+        abi: loadDemoAbi(),
         includeVectors: true,
       });
       res.json(report);

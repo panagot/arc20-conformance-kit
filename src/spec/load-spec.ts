@@ -1,22 +1,15 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import iarc20SpecJson from "./data/iarc20.json" with { type: "json" };
+import vectorsJson from "./data/iarc20-vectors.json" with { type: "json" };
+import demoAbiJson from "./data/demo-abi.json" with { type: "json" };
 
-import type { ConformanceVector, Iarc20Spec } from "../types.js";
-
-const packageRoot =
-  process.env.VERCEL === "1"
-    ? process.cwd()
-    : join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+import type { ConformanceVector, Iarc20Spec, LeoAbi } from "../types.js";
 
 export function loadIarc20Spec(): Iarc20Spec {
-  const path = join(packageRoot, "spec", "iarc20.json");
-  return JSON.parse(readFileSync(path, "utf8")) as Iarc20Spec;
+  return iarc20SpecJson as Iarc20Spec;
 }
 
 export function loadRawConformanceVectors() {
-  const path = join(packageRoot, "spec", "vectors", "iarc20-vectors.json");
-  return JSON.parse(readFileSync(path, "utf8")) as Array<{
+  return vectorsJson as Array<{
     id: string;
     title: string;
     category: string;
@@ -37,6 +30,6 @@ export function loadConformanceVectors(): ConformanceVector[] {
   }));
 }
 
-export function getPackageRoot(): string {
-  return packageRoot;
+export function loadDemoAbi(): LeoAbi {
+  return demoAbiJson as LeoAbi;
 }

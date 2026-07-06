@@ -67,7 +67,7 @@ Fetches program source from Provable API and verifies function/view presence.
 
 ## Step 4 — Review behavioral vectors
 
-See `spec/vectors/iarc20-vectors.json`. Each vector documents expected behavior:
+See `src/spec/data/iarc20-vectors.json`. Each vector documents expected behavior:
 
 | ID | Scenario |
 |----|----------|
