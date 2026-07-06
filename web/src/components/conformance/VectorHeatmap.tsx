@@ -15,6 +15,10 @@ const coverageLabel: Record<ConformanceVector["staticCoverage"], string> = {
   none: "No coverage",
 };
 
+function vectorNumber(id: string) {
+  return id.replace("IARC20-", "");
+}
+
 export function VectorHeatmap({
   vectors,
   checks,
@@ -27,7 +31,7 @@ export function VectorHeatmap({
   return (
     <div>
       <div
-        className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12"
+        className="grid grid-cols-6 gap-1.5 sm:grid-cols-12 sm:gap-1"
         role="list"
         aria-label="Vector coverage heatmap"
       >
@@ -40,20 +44,15 @@ export function VectorHeatmap({
             aria-label={`${vector.id}: ${vector.title}, ${coverageLabel[vector.staticCoverage]}`}
             aria-pressed={selected?.id === vector.id}
             className={cn(
-              "group relative aspect-square rounded-[4px] border bg-[color:var(--panel-2)] p-1 transition-transform hover:scale-[1.03]",
+              "group relative flex aspect-square min-h-[2.25rem] items-center justify-center rounded-[4px] border transition-[transform,box-shadow]",
+              tone[vector.staticCoverage],
               selected?.id === vector.id
-                ? "border-[color:var(--accent)]"
-                : "border-[color:var(--border)]",
+                ? "z-[1] scale-[1.04] border-[color:var(--accent)] shadow-[0_0_0_2px_var(--panel),0_0_0_3px_var(--accent)]"
+                : "border-[color:var(--border)]/30 hover:scale-[1.03]",
             )}
           >
-            <div
-              className={cn(
-                "h-full w-full rounded-[2px] opacity-90",
-                tone[vector.staticCoverage],
-              )}
-            />
-            <span className="absolute bottom-1 left-1 rounded-[2px] px-1 font-display text-[10px] font-semibold text-white" style={{ background: "var(--heatmap-label-bg)" }}>
-              {vector.id.replace("IARC20-", "")}
+            <span className="font-display text-[10px] font-bold tabular-nums leading-none text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.25)] sm:text-[9px]">
+              {vectorNumber(vector.id)}
             </span>
           </button>
         ))}
