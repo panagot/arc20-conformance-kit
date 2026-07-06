@@ -1,0 +1,183 @@
+{
+  "arc": 20,
+  "interface": "IARC20",
+  "status": "Final",
+  "spec_url": "https://github.com/ProvableHQ/ARCs/blob/master/arc-0020/README.md",
+  "discussion_url": "https://github.com/ProvableHQ/ARCs/discussions/124",
+  "record": {
+    "name": "Token",
+    "required_fields": [
+      { "name": "owner", "type": "Address" },
+      { "name": "amount", "type": "U128" }
+    ]
+  },
+  "functions": [
+    {
+      "name": "transfer_public",
+      "category": "transfer",
+      "inputs": [
+        { "name": "recipient", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Final"]
+    },
+    {
+      "name": "transfer_private",
+      "category": "transfer",
+      "inputs": [
+        { "name": "input", "mode": "Private", "type": "Token" },
+        { "name": "recipient", "mode": "Private", "type": "Address" },
+        { "name": "amount", "mode": "Private", "type": "U128" }
+      ],
+      "outputs": ["Token", "Token"]
+    },
+    {
+      "name": "transfer_private_to_public",
+      "category": "transfer",
+      "inputs": [
+        { "name": "input", "mode": "Private", "type": "Token" },
+        { "name": "recipient", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Token", "Final"]
+    },
+    {
+      "name": "transfer_public_to_private",
+      "category": "transfer",
+      "inputs": [
+        { "name": "recipient", "mode": "Private", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Token", "Final"]
+    },
+    {
+      "name": "transfer_public_as_signer",
+      "category": "transfer",
+      "inputs": [
+        { "name": "recipient", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Final"]
+    },
+    {
+      "name": "transfer_from_public",
+      "category": "transfer",
+      "inputs": [
+        { "name": "owner", "mode": "Public", "type": "Address" },
+        { "name": "recipient", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Final"]
+    },
+    {
+      "name": "transfer_from_public_to_private",
+      "category": "transfer",
+      "inputs": [
+        { "name": "owner", "mode": "Public", "type": "Address" },
+        { "name": "recipient", "mode": "Private", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Token", "Final"]
+    },
+    {
+      "name": "approve_public",
+      "category": "approval",
+      "inputs": [
+        { "name": "spender", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Final"]
+    },
+    {
+      "name": "unapprove_public",
+      "category": "approval",
+      "inputs": [
+        { "name": "spender", "mode": "Public", "type": "Address" },
+        { "name": "amount", "mode": "Public", "type": "U128" }
+      ],
+      "outputs": ["Final"]
+    },
+    {
+      "name": "join",
+      "category": "record",
+      "inputs": [
+        { "name": "input_1", "mode": "Private", "type": "Token" },
+        { "name": "input_2", "mode": "Private", "type": "Token" }
+      ],
+      "outputs": ["Token"]
+    },
+    {
+      "name": "split",
+      "category": "record",
+      "inputs": [
+        { "name": "input", "mode": "Private", "type": "Token" },
+        { "name": "amount", "mode": "Private", "type": "U128" }
+      ],
+      "outputs": ["Token", "Token"]
+    }
+  ],
+  "views": [
+    {
+      "name": "balance_of",
+      "inputs": [
+        { "name": "account", "type": "Address" }
+      ],
+      "output": "U128"
+    },
+    {
+      "name": "allowance",
+      "inputs": [
+        { "name": "owner", "type": "Address" },
+        { "name": "spender", "type": "Address" }
+      ],
+      "output": "U128"
+    },
+    {
+      "name": "supply",
+      "inputs": [],
+      "output": "U128"
+    },
+    {
+      "name": "max_supply",
+      "inputs": [],
+      "output": "U128"
+    },
+    {
+      "name": "decimals",
+      "inputs": [],
+      "output": "U8"
+    },
+    {
+      "name": "name",
+      "inputs": [],
+      "output": "Identifier"
+    },
+    {
+      "name": "symbol",
+      "inputs": [],
+      "output": "Identifier"
+    }
+  ],
+  "design_rules": [
+    {
+      "id": "DR-001",
+      "title": "Additive approvals",
+      "description": "approve_public increases allowance; unapprove_public decreases it (not ERC-20 replace semantics)."
+    },
+    {
+      "id": "DR-002",
+      "title": "u128 amounts",
+      "description": "All transfer and approval amounts use u128."
+    },
+    {
+      "id": "DR-003",
+      "title": "Token record",
+      "description": "Token record must include owner: address and amount: u128; extra fields allowed."
+    },
+    {
+      "id": "DR-004",
+      "title": "Interface declaration",
+      "description": "Program should declare ': IARC20' in Leo source for dynamic dispatch compatibility."
+    }
+  ]
+}

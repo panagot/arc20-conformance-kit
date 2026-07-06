@@ -1,0 +1,213 @@
+[
+  {
+    "id": "IARC20-001",
+    "title": "Public transfer between accounts",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_public moves u128 from caller balance to recipient public balance.",
+    "preconditions": [
+      "Caller public balance >= amount",
+      "amount > 0"
+    ],
+    "action": {
+      "function": "transfer_public",
+      "args": { "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "Transaction finalizes without abort",
+      "Caller balance decreases by amount",
+      "Recipient balance increases by amount"
+    ],
+    "static_checks": ["transfer_public", "balance_of"]
+  },
+  {
+    "id": "IARC20-002",
+    "title": "Private transfer splits token record",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_private consumes input Token and returns change + recipient Token records.",
+    "preconditions": [
+      "input.amount >= amount",
+      "input.owner == caller"
+    ],
+    "action": {
+      "function": "transfer_private",
+      "args": { "input": "<Token>", "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "Returns two Token records",
+      "Change record owned by original spender",
+      "Recipient record owned by recipient with amount"
+    ],
+    "static_checks": ["transfer_private", "split"]
+  },
+  {
+    "id": "IARC20-003",
+    "title": "Private to public unshield",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_private_to_public converts private balance to recipient public balance.",
+    "preconditions": ["input.amount >= amount"],
+    "action": {
+      "function": "transfer_private_to_public",
+      "args": { "input": "<Token>", "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "Returns change Token and Final",
+      "Recipient public balance increases by amount"
+    ],
+    "static_checks": ["transfer_private_to_public"]
+  },
+  {
+    "id": "IARC20-004",
+    "title": "Public to private shield",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_public_to_private mints a private Token for recipient.",
+    "preconditions": ["Caller public balance >= amount"],
+    "action": {
+      "function": "transfer_public_to_private",
+      "args": { "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "Returns Token owned by recipient",
+      "Caller public balance decreases by amount"
+    ],
+    "static_checks": ["transfer_public_to_private"]
+  },
+  {
+    "id": "IARC20-005",
+    "title": "Signer-scoped public transfer",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_public_as_signer debits transaction signer, not immediate caller.",
+    "preconditions": ["Signer public balance >= amount"],
+    "action": {
+      "function": "transfer_public_as_signer",
+      "args": { "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": ["Signer balance decreases; recipient increases"],
+    "static_checks": ["transfer_public_as_signer"]
+  },
+  {
+    "id": "IARC20-006",
+    "title": "Transfer from with allowance",
+    "category": "approval",
+    "priority": "required",
+    "description": "transfer_from_public moves tokens when spender has sufficient allowance.",
+    "preconditions": [
+      "allowance(owner, spender) >= amount",
+      "balance_of(owner) >= amount"
+    ],
+    "action": {
+      "function": "transfer_from_public",
+      "args": { "owner": "<address>", "recipient": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "Owner balance decreases",
+      "Recipient balance increases",
+      "Allowance decreases by amount"
+    ],
+    "static_checks": ["transfer_from_public", "approve_public", "allowance"]
+  },
+  {
+    "id": "IARC20-007",
+    "title": "Additive approval increase",
+    "category": "approval",
+    "priority": "required",
+    "description": "Two approve_public calls in sequence add allowances (ARC-20 additive model).",
+    "preconditions": ["Existing allowance may be non-zero"],
+    "action": {
+      "function": "approve_public",
+      "args": { "spender": "<address>", "amount": "<u128>" }
+    },
+    "expects": [
+      "allowance increases by amount rather than replacing prior value"
+    ],
+    "static_checks": ["approve_public", "allowance"]
+  },
+  {
+    "id": "IARC20-008",
+    "title": "Unapprove decreases allowance",
+    "category": "approval",
+    "priority": "required",
+    "description": "unapprove_public reduces allowance; underflow aborts on-chain.",
+    "preconditions": ["allowance >= amount"],
+    "action": {
+      "function": "unapprove_public",
+      "args": { "spender": "<address>", "amount": "<u128>" }
+    },
+    "expects": ["Allowance decreases by amount"],
+    "static_checks": ["unapprove_public", "allowance"]
+  },
+  {
+    "id": "IARC20-009",
+    "title": "Join two token records",
+    "category": "record",
+    "priority": "required",
+    "description": "join merges two Token records with same owner.",
+    "preconditions": ["Both records owned by same address"],
+    "action": {
+      "function": "join",
+      "args": { "input_1": "<Token>", "input_2": "<Token>" }
+    },
+    "expects": ["Single Token with combined amount"],
+    "static_checks": ["join"]
+  },
+  {
+    "id": "IARC20-010",
+    "title": "Split token record",
+    "category": "record",
+    "priority": "required",
+    "description": "split divides one Token into change + partial amount records.",
+    "preconditions": ["input.amount >= amount"],
+    "action": {
+      "function": "split",
+      "args": { "input": "<Token>", "amount": "<u128>" }
+    },
+    "expects": ["Two Token records summing to original amount"],
+    "static_checks": ["split"]
+  },
+  {
+    "id": "IARC20-011",
+    "title": "View accessors for integrators",
+    "category": "views",
+    "priority": "required",
+    "description": "All IARC20 view fn accessors exist for SDK/explorer reads.",
+    "preconditions": ["Program deployed"],
+    "action": { "function": "view_suite", "args": {} },
+    "expects": [
+      "balance_of, allowance, supply, max_supply, decimals, name, symbol callable"
+    ],
+    "static_checks": [
+      "balance_of",
+      "allowance",
+      "supply",
+      "max_supply",
+      "decimals",
+      "name",
+      "symbol"
+    ]
+  },
+  {
+    "id": "IARC20-012",
+    "title": "Transfer from public to private with hidden recipient",
+    "category": "transfer",
+    "priority": "required",
+    "description": "transfer_from_public_to_private routes shielded Token to private recipient.",
+    "preconditions": [
+      "allowance(owner, spender) >= amount",
+      "balance_of(owner) >= amount"
+    ],
+    "action": {
+      "function": "transfer_from_public_to_private",
+      "args": {
+        "owner": "<address>",
+        "recipient": "<address>",
+        "amount": "<u128>"
+      }
+    },
+    "expects": ["Returns Token + Final; recipient address not public"],
+    "static_checks": ["transfer_from_public_to_private"]
+  }
+]
