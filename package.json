@@ -14,7 +14,9 @@
     "build:web": "vite build",
     "check": "tsx src/cli.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:smoke": "node scripts/smoke-test.mjs http://localhost:5173",
+    "test:smoke:vercel": "node scripts/smoke-test.mjs https://arc20-conformance-kit.vercel.app"
   },
   "engines": {
     "node": ">=20"

@@ -21,12 +21,18 @@ export async function fetchProgramSource(
     );
   }
 
-  const payload = (await response.json()) as ProvableProgramResponse & {
-    program_id?: string;
-    edition?: number;
-    program?: string;
-    source?: string;
-  };
+  const payload = (await response.json()) as
+    | string
+    | (ProvableProgramResponse & {
+        program_id?: string;
+        edition?: number;
+        program?: string;
+        source?: string;
+      });
+
+  if (typeof payload === "string") {
+    return { source: payload };
+  }
 
   const source = payload.source ?? payload.program;
   if (!source || typeof source !== "string") {
