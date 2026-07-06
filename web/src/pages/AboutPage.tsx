@@ -1,4 +1,5 @@
-import { Copy, ExternalLink } from "lucide-react";
+import { Copy, ExternalLink, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 import { PageToolbar, Panel } from "../components/layout/PageToolbar";
@@ -28,7 +29,17 @@ export function AboutPage() {
         description="Open-source IARC20 conformance QA for Aleo Leo token programs — for wallet teams, DeFi integrators, and token issuers."
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel title="What it checks">
+          <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+            <li>11 required IARC20 entry functions</li>
+            <li>7 view accessors (balance, allowance, metadata)</li>
+            <li>Token record shape (owner + amount)</li>
+            <li>12 behavioral vector scenarios</li>
+            <li>Deployed program source via Provable API</li>
+          </ul>
+        </Panel>
+
         <Panel title="What it does">
           <p className="text-sm leading-relaxed text-[color:var(--muted)]">
             Leo v4 introduced interfaces and dynamic dispatch so protocols can call any IARC20
@@ -59,20 +70,43 @@ export function AboutPage() {
         </Panel>
       </div>
 
-      <Panel title="Source" className="mt-4">
-        <p className="text-sm leading-relaxed text-[color:var(--muted)]">
-          MIT-licensed open source. Report issues, suggest vectors, or contribute checks on GitHub.
-        </p>
-        <a
-          href="https://github.com/panagot/arc20-conformance-kit"
-          target="_blank"
-          rel="noreferrer"
-          className="btn-secondary mt-4 inline-flex items-center gap-2"
-        >
-          <ExternalLink className="h-4 w-4" />
-          github.com/panagot/arc20-conformance-kit
-        </a>
-      </Panel>
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <Panel title="Documentation">
+          <p className="text-sm leading-relaxed text-[color:var(--muted)]">
+            Step-by-step guide for wallet and DeFi teams integrating IARC20 tokens.
+          </p>
+          <a
+            href="https://github.com/panagot/arc20-conformance-kit/blob/main/docs/INTEGRATOR_GUIDE.md"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-secondary mt-4 inline-flex items-center gap-2"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Integrator guide
+          </a>
+        </Panel>
+
+        <Panel title="Source & proposal">
+          <p className="text-sm leading-relaxed text-[color:var(--muted)]">
+            MIT-licensed open source. Report issues, suggest vectors, or contribute on GitHub.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href="https://github.com/panagot/arc20-conformance-kit"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-secondary inline-flex items-center gap-2"
+            >
+              <ExternalLink className="h-4 w-4" />
+              GitHub
+            </a>
+            <Link to="/proposal" className="btn-secondary inline-flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Project proposal
+            </Link>
+          </div>
+        </Panel>
+      </div>
     </div>
   );
 }

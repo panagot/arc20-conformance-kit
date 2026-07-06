@@ -32,8 +32,13 @@ export function getAssistantReply(
     (q.includes("report") && !q.includes("what"));
 
   if (!context.apiOnline && (actionIntents || q.includes("api offline"))) {
+    const isLocal =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
     return {
-      text: "The conformance API appears offline. Start the workstation with npm run dev:web (API on port 8787).",
+      text: isLocal
+        ? "The conformance API appears offline. Start the workstation with npm run dev:web (API on port 8787)."
+        : "The conformance API is temporarily unavailable. Please try again in a moment.",
       links: [{ label: "Overview", to: "/" }],
     };
   }

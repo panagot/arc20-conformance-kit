@@ -31,8 +31,10 @@ export function SiteFooter() {
           </div>
           <ul className="mt-3 space-y-2 text-sm">
             <li><Link to="/about">About</Link></li>
+            <li><Link to="/proposal">Project proposal</Link></li>
             <li><Link to="/spec">IARC20 Spec Browser</Link></li>
             <li><Link to="/vectors">Test Vectors</Link></li>
+            <li><a href="https://github.com/panagot/arc20-conformance-kit/blob/main/docs/INTEGRATOR_GUIDE.md" target="_blank" rel="noreferrer">Integrator guide</a></li>
           </ul>
         </div>
       </div>

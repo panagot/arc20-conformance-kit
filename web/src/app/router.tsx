@@ -5,6 +5,7 @@ import { AboutPage } from "../pages/AboutPage";
 import { AbiCheckPage } from "../pages/AbiCheckPage";
 import { OverviewPage } from "../pages/OverviewPage";
 import { ProgramCheckPage } from "../pages/ProgramCheckPage";
+import { ProposalPage } from "../pages/ProposalPage";
 import { ReportPage } from "../pages/ReportPage";
 import { SpecPage } from "../pages/SpecPage";
 import { VectorsPage } from "../pages/VectorsPage";
@@ -28,6 +29,7 @@ export function AppRouter({
         <Route path="spec" element={<SpecPage />} />
         <Route path="vectors" element={<VectorsPage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="proposal" element={<ProposalPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
